@@ -1,0 +1,43 @@
+# Symfony environment & config
+/.env
+.env.dev
+.env.test
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+
+# Symfony cache & logs
+/var/
+/public/bundles/
+
+# Composer dependencies
+/vendor/
+
+# PHPUnit
+/phpunit.xml
+.phpunit.result.cache
+
+# Asset mapper / compiled assets
+/public/assets/
+/assets/vendor/
+
+# Node modules (if using npm/yarn)
+node_modules/
+/yarn.lock
+/package-lock.json
+
+# IDEs & editors
+/.idea/
+/*.iml
+/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Symfony profiler
+/.profiler/
+
+# Optional: local Docker files
+/.docker/
