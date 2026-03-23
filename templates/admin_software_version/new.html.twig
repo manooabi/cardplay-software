@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New SoftwareVersion{% endblock %}
+
+{% block body %}
+    <h1>Create new SoftwareVersion</h1>
+
+    {{ include('admin_software_version/_form.html.twig') }}
+
+    <a href="{{ path('app_admin_software_version_index') }}">back to list</a>
+{% endblock %}

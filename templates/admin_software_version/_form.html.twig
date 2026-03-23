@@ -1,0 +1,89 @@
+<div class="sv-form-card">
+    {{ form_start(form, {'attr': {'class': 'sv-form'}}) }}
+        {% for field in form %}
+            <div class="sv-form-group">
+                {{ form_label(field) }}
+                {{ form_widget(field, {'attr': {'class': 'sv-input'}}) }}
+                <div class="sv-error">{{ form_errors(field) }}</div>
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="sv-btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+</div>
+
+<style>
+/* Form Card */
+.sv-form-card {
+    background: #fff;
+    border: 0.5px solid #e0dfd8;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    max-width: 700px;
+    margin: auto;
+}
+
+/* Form Groups */
+.sv-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+}
+
+/* Labels */
+.sv-form-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #888780;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Inputs, Textareas, Selects */
+.sv-input {
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 0.5px solid #e0dfd8;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sv-input:focus {
+    border-color: #185FA5;
+    box-shadow: 0 0 0 2px rgba(24, 95, 165, 0.15);
+}
+
+/* Error messages */
+.sv-error {
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 4px;
+}
+
+/* Submit Button */
+.sv-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    background: #1a1a18;
+    color: #fff;
+    transition: opacity 0.2s;
+}
+
+.sv-btn:hover {
+    opacity: 0.85;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sv-form-card {
+        padding: 1rem;
+    }
+}
+</style>

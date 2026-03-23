@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background: #f5f4f0;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .login-card {
+      background: #fff;
+      border: 0.5px solid #e0dfd8;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: #1a1a18;
+      margin: 0 0 0.25rem;
+      letter-spacing: -0.5px;
+    }
+    .login-sub {
+      font-size: 14px;
+      color: #888780;
+      margin: 0 0 2rem;
+    }
+    .alert-danger {
+      background: #fcebeb;
+      color: #a32d2d;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      font-size: 13px;
+      margin-bottom: 1.25rem;
+      border: none;
+    }
+    .logged-in-notice {
+      background: #f5f4f0;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      font-size: 13px;
+      color: #888780;
+      margin-bottom: 1.25rem;
+    }
+    .field { margin-bottom: 1rem; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #5f5e5a;
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      font-size: 14px;
+      font-family: inherit;
+      background: #f5f4f0;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      color: #1a1a18;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: #888;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+    }
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #888780;
+      margin: 1rem 0 1.5rem;
+      cursor: pointer;
+    }
+    .btn-signin {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      background: #1a1a18;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-signin:hover { opacity: 0.85; }
+    hr.divider {
+      border: none;
+      border-top: 0.5px solid #e0dfd8;
+      margin: 1.75rem 0 0;
+    }
+    .footer-note {
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      margin-top: 1rem;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="login-wrap">
+  <div class="login-card">
+    <p class="login-logo">Welcome back.</p>
+    <p class="login-sub">Sign in to continue to your account.</p>
+
+    {% if error %}
+      <div class="alert-danger">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+      </div>
+    {% endif %}
+
+    {% if app.user %}
+      <div class="logged-in-notice">
+        Signed in as {{ app.user.userIdentifier }}.
+        <a href="{{ logout_path() }}">Log out</a>
+      </div>
+    {% endif %}
+
+    <form method="post">
+      <div class="field">
+        <label for="inputEmail">Email address</label>
+        <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+               autocomplete="email" required autofocus placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="inputPassword">Password</label>
+        <input type="password" name="password" id="inputPassword"
+               autocomplete="current-password" required placeholder="••••••••">
+      </div>
+      <input type="hidden" name="_csrf_token"
+             data-controller="csrf-protection"
+             value="{{ csrf_token('authenticate') }}">
+
+      <label class="remember">
+        <input type="checkbox" name="_remember_me"> Keep me signed in
+      </label>
+
+      <button class="btn-signin" type="submit">Sign in</button>
+    </form>
+
+    <hr class="divider">
+    <p class="footer-note">Forgot your password? Contact your administrator.</p>
+  </div>
+</div>
+{% endblock %}

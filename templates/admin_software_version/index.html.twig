@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Software Versions{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+  .sv-page { padding: 2rem 0; font-family: system-ui, sans-serif; }
+  .sv-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .sv-title { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .btn-new {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; font-size: 13px; font-weight: 500;
+    background: #1a1a18; color: #fff; border: none;
+    border-radius: 8px; cursor: pointer; text-decoration: none;
+  }
+  .btn-new:hover { opacity: 0.85; }
+
+  .table-wrap {
+    background: #fff; border: 0.5px solid #e0dfd8;
+    border-radius: 12px; overflow: hidden;
+  }
+  .sv-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+  .sv-table thead tr { background: #f5f4f0; }
+  .sv-table th {
+    padding: 10px 14px; text-align: left;
+    font-size: 11px; font-weight: 500; color: #888780;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: 0.5px solid #e0dfd8;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sv-table td {
+    padding: 11px 14px; color: #1a1a18;
+    border-bottom: 0.5px solid #e8e7e0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sv-table tbody tr:last-child td { border-bottom: none; }
+  .sv-table tbody tr:hover { background: #f9f8f5; }
+  .sv-table .col-id { width: 52px; color: #aaa; font-variant-numeric: tabular-nums; }
+  .sv-table .col-name { width: 130px; font-weight: 500; }
+  .sv-table .col-ver, .sv-table .col-alt { width: 110px; }
+  .sv-table .col-link { width: 100px; color: #185FA5; }
+  .sv-table .col-latest { width: 70px; }
+  .sv-table .col-actions { width: 110px; }
+  .badge {
+    display: inline-block; padding: 2px 8px;
+    border-radius: 20px; font-size: 11px; font-weight: 500;
+  }
+  .badge-yes { background: #EAF3DE; color: #27500A; }
+  .badge-no  { background: #F1EFE8; color: #5F5E5A; }
+  .sv-actions { display: flex; gap: 6px; }
+  .act-btn {
+    display: inline-flex; align-items: center;
+    padding: 4px 10px; font-size: 12px; font-weight: 500;
+    border-radius: 6px; cursor: pointer; text-decoration: none;
+    border: 0.5px solid #ccc; background: transparent; color: #5F5E5A;
+  }
+  .act-btn:hover { background: #f5f4f0; color: #1a1a18; }
+  .act-btn.edit { color: #185FA5; border-color: #85B7EB; }
+  .act-btn.edit:hover { background: #E6F1FB; }
+  .sv-empty { text-align: center; color: #aaa; padding: 2.5rem !important; }
+
+  /* Pagination styling */
+  .sv-pagination .pagination {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+    gap: 6px;
+  }
+  .sv-pagination .page-item a,
+  .sv-pagination .page-item span {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 0.5px solid #ccc;
+    text-decoration: none;
+    color: #1a1a18;
+    font-size: 13px;
+  }
+  .sv-pagination .page-item.active span {
+    background: #1a1a18;
+    color: #fff;
+    border-color: #1a1a18;
+  }
+  .sv-pagination .page-item a:hover {
+    background: #f5f4f0;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="sv-page">
+<div class="sv-header">
+  <span class="sv-title">Software Versions</span>
+  <div style="display: flex; gap: 10px;">
+    <a href="{{ path('app_admin_software_version_new') }}" class="btn-new">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      New Version
+    </a>
+    <a href="{{ path('app_logout') }}" class="btn-new" style="background:#d9534f;">
+      Logout
+    </a>
+  </div>
+</div>
+
+  <div class="table-wrap">
+    <table class="sv-table">
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th class="col-name">Name</th>
+          <th class="col-ver">System ver.</th>
+          <th class="col-alt">Alt ver.</th>
+          <th class="col-link">Link</th>
+          <th class="col-link">ST link</th>
+          <th class="col-link">GD link</th>
+          <th class="col-latest">Latest</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for software_version in software_versions %}
+        <tr>
+          <td class="col-id">{{ software_version.id }}</td>
+          <td class="col-name">{{ software_version.name }}</td>
+          <td class="col-ver">{{ software_version.systemVersion }}</td>
+          <td class="col-alt">{{ software_version.systemVersionAlt ?: '—' }}</td>
+         <td class="col-link">
+  {% if software_version.link %}
+    <a href="{{ software_version.link }}" target="_blank" rel="noopener noreferrer">{{ software_version.link }}</a>
+  {% else %}
+    — 
+  {% endif %}
+</td>
+
+<td class="col-link">
+  {% if software_version.stLink %}
+    <a href="{{ software_version.stLink }}" target="_blank" rel="noopener noreferrer">{{ software_version.stLink }}</a>
+  {% else %}
+    — 
+  {% endif %}
+</td>
+
+<td class="col-link">
+  {% if software_version.gdLink %}
+    <a href="{{ software_version.gdLink }}" target="_blank" rel="noopener noreferrer">{{ software_version.gdLink }}</a>
+  {% else %}
+    — 
+  {% endif %}
+</td>
+          <td class="col-latest">
+            {% if software_version.latest %}
+              <span class="badge badge-yes">Yes</span>
+            {% else %}
+              <span class="badge badge-no">No</span>
+            {% endif %}
+          </td>
+          <td class="col-actions">
+            <div class="sv-actions">
+              <a href="{{ path('app_admin_software_version_show', {'id': software_version.id}) }}" class="act-btn">Show</a>
+              <a href="{{ path('app_admin_software_version_edit', {'id': software_version.id}) }}" class="act-btn edit">Edit</a>
+            </div>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="9" class="sv-empty">No records found</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="sv-pagination" style="text-align:center;">
+    {{ knp_pagination_render(software_versions) }}
+  </div>
+</div>
+{% endblock %}

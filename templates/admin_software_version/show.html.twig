@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Software Version{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+  .sv-page { padding: 2rem 0; font-family: system-ui, sans-serif; max-width: 700px; margin: auto; }
+  .sv-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .sv-title { font-size: 20px; font-weight: 600; color: #1a1a18; }
+  .btn-back, .btn-edit {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; font-size: 13px; font-weight: 500;
+    background: #1a1a18; color: #fff; border: none;
+    border-radius: 8px; cursor: pointer; text-decoration: none;
+  }
+  .btn-back:hover, .btn-edit:hover { opacity: 0.85; }
+  .sv-table-wrap {
+    background: #fff; border: 0.5px solid #e0dfd8;
+    border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem;
+  }
+  .sv-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .sv-table th, .sv-table td {
+    padding: 12px 14px;
+    border-bottom: 0.5px solid #e8e7e0;
+    vertical-align: top;
+  }
+  .sv-table th {
+    width: 140px;
+    color: #888780;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+    background: #f5f4f0;
+  }
+  .sv-table td { color: #1a1a18; }
+  .badge {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 20px; font-size: 12px; font-weight: 500;
+  }
+  .badge-yes { background: #EAF3DE; color: #27500A; }
+  .badge-no  { background: #F1EFE8; color: #5F5E5A; }
+  .sv-actions { display: flex; gap: 8px; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="sv-page">
+  <div class="sv-header">
+    <span class="sv-title">Software Version Details</span>
+    <div class="sv-actions">
+      <a href="{{ path('app_admin_software_version_index') }}" class="btn-back">Back to List</a>
+      <a href="{{ path('app_admin_software_version_edit', {'id': software_version.id}) }}" class="btn-edit">Edit</a>
+    </div>
+  </div>
+
+  <div class="sv-table-wrap">
+    <table class="sv-table">
+      <tbody>
+        <tr>
+          <th>ID</th>
+          <td>{{ software_version.id }}</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>{{ software_version.name }}</td>
+        </tr>
+        <tr>
+          <th>System Version</th>
+          <td>{{ software_version.systemVersion }}</td>
+        </tr>
+        <tr>
+          <th>Alt Version</th>
+          <td>{{ software_version.systemVersionAlt ?: '—' }}</td>
+        </tr>
+        <tr>
+          <th>Link</th>
+          <td>
+            {% if software_version.link %}
+              <a href="{{ software_version.link }}" target="_blank" class="col-link">Open</a>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>ST Link</th>
+          <td>
+            {% if software_version.stLink %}
+              <a href="{{ software_version.stLink }}" target="_blank" class="col-link">Open</a>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>GD Link</th>
+          <td>
+            {% if software_version.gdLink %}
+              <a href="{{ software_version.gdLink }}" target="_blank" class="col-link">Open</a>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Latest</th>
+          <td>
+            {% if software_version.latest %}
+              <span class="badge badge-yes">Yes</span>
+            {% else %}
+              <span class="badge badge-no">No</span>
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  {{ include('admin_software_version/_delete_form.html.twig') }}
+</div>
+{% endblock %}

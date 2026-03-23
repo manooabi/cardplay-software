@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Firmware Download{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+    }
+
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #34495e;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    button {
+        background-color: #2980b9;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #1f618d;
+    }
+
+    #result {
+        max-width: 500px;
+        margin: 20px auto 0;
+        padding: 20px;
+        background-color: #ecf0f1;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    #result p {
+        margin: 8px 0;
+        font-size: 14px;
+    }
+
+    #result a {
+        color: #2980b9;
+        text-decoration: none;
+    }
+
+    #result a:hover {
+        text-decoration: underline;
+    }
+
+    .error {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+</style>
+
+<h1>Firmware Download</h1>
+
+<div class="form-container">
+    <form id="firmware-form">
+        <label for="system_version">System Version:</label>
+        <input type="text" id="system_version" name="system_version" placeholder="Enter system version" required>
+
+        <label for="system_version_alt">Alternate System Version (optional):</label>
+        <input type="text" id="system_version_alt" name="system_version_alt" placeholder="Enter alternate system version">
+
+        <button type="submit">Check Firmware</button>
+    </form>
+</div>
+
+<div id="result"></div>
+
+<script>
+document.getElementById('firmware-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const system_version = document.getElementById('system_version').value.trim();
+    const system_version_alt = document.getElementById('system_version_alt').value.trim();
+    const resultDiv = document.getElementById('result');
+
+    resultDiv.innerHTML = '<p>Checking firmware...</p>';
+
+    try {
+        const response = await fetch('{{ path("api_software_version_match") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ system_version, system_version_alt })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            let html = `<p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Link:</strong> <a href="${data.link}" target="_blank">${data.link}</a></p>
+                        <p><strong>ST Link:</strong> <a href="${data.st_link}" target="_blank">${data.st_link}</a></p>
+                        <p><strong>GD Link:</strong> <a href="${data.gd_link}" target="_blank">${data.gd_link}</a></p>
+                        <p><strong>Latest:</strong> ${data.latest ? 'Yes' : 'No'}</p>`;
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<p class="error">Error contacting API: ${error}</p>`;
+    }
+});
+</script>
+{% endblock %}
